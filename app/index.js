@@ -31,40 +31,42 @@ export default class InfiniteScroll extends Component {
   }
 
   componentDidMount() {
-    this._scrollableNode = this.getScrollableTarget();
-    this.el = this.props.height
-      ? this._infScroll
-      : this._scrollableNode || window;
-    this.el.addEventListener("scroll", this.throttledOnScrollListener);
+    setTimeout(() => {
+      this._scrollableNode = this.getScrollableTarget();
+      this.el = this.props.height
+        ? this._infScroll
+        : this._scrollableNode || window;
+      this.el.addEventListener("scroll", this.throttledOnScrollListener);
 
-    if (
-      typeof this.props.initialScrollY === "number" &&
-      this.el.scrollHeight > this.props.initialScrollY
-    ) {
-      this.el.scrollTo(0, this.props.initialScrollY);
-    }
+      if (
+        typeof this.props.initialScrollY === "number" &&
+        this.el.scrollHeight > this.props.initialScrollY
+      ) {
+        this.el.scrollTo(0, this.props.initialScrollY);
+      }
 
-    if (this.props.pullDownToRefresh) {
-      this.el.addEventListener("touchstart", this.onStart);
-      this.el.addEventListener("touchmove", this.onMove);
-      this.el.addEventListener("touchend", this.onEnd);
+      if (this.props.pullDownToRefresh) {
+        this.el.addEventListener("touchstart", this.onStart);
+        this.el.addEventListener("touchmove", this.onMove);
+        this.el.addEventListener("touchend", this.onEnd);
 
-      this.el.addEventListener("mousedown", this.onStart);
-      this.el.addEventListener("mousemove", this.onMove);
-      this.el.addEventListener("mouseup", this.onEnd);
+        this.el.addEventListener("mousedown", this.onStart);
+        this.el.addEventListener("mousemove", this.onMove);
+        this.el.addEventListener("mouseup", this.onEnd);
 
-      // get BCR of pullDown element to position it above
-      this.maxPullDownDistance = this._pullDown.firstChild.getBoundingClientRect().height;
-      this.forceUpdate();
+        // get BCR of pullDown element to position it above
+        this.maxPullDownDistance = this._pullDown.firstChild.getBoundingClientRect().height;
+        this.forceUpdate();
 
-      if (typeof this.props.refreshFunction !== "function") {
-        throw new Error(
-          `Mandatory prop "refreshFunction" missing.
+        if (typeof this.props.refreshFunction !== "function") {
+          throw new Error(
+            `Mandatory prop "refreshFunction" missing.
           Pull Down To Refresh functionality will not work
           as expected. Check README.md for usage'`
-        );
+          );
+        }
       }
-    }
+    }, 200);
   }
 
   componentWillUnmount() {
